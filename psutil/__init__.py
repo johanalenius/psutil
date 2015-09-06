@@ -590,6 +590,10 @@ class Process(object):
         """The command line this process has been called with."""
         return self._proc.cmdline()
 
+    def environ(self):
+        """The environment this process was called in."""
+        return self._proc.environ()
+
     def status(self):
         """The process current status as a STATUS_* constant."""
         try:

@@ -842,6 +842,15 @@ class Process(object):
         return [x for x in data.split('\x00')]
 
     @wrap_exceptions
+    def environ(self):
+        with open_text("/proc/%s/environ" % self.pid) as f:
+            data = f.read()
+        if data.endswith('\x00'):
+            data = data[:-1]
+        env_pairs = [x.split('=', maxsplit=1) for x in data.split('\x00')]
+        return {k: v[0] for (k, *v) in env_pairs}
+
+    @wrap_exceptions
     def terminal(self):
         tmap = _psposix._get_terminal_map()
         with open("%s/%s/stat" % (self._procfs_path, self.pid), 'rb') as f:
